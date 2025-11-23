@@ -1,0 +1,106 @@
+﻿@{
+    ViewData["Title"] = "Text to Audio (Azure OpenAI)";
+    Layout = null; // अगर आप अपना shared _Layout.cshtml इस्तेमाल करना चाहें, तो इसे हटा दें
+}
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f7f7f7; }
+        .container { max-width: 700px; margin: 40px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h1 { text-align: center; margin-top: 0; }
+        textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; margin-bottom: 15px; }
+        .row { display: flex; gap: 10px; margin-bottom: 15px; align-items: center; }
+        select, button { padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
+        button { background: #0078d7; color: #fff; border: none; cursor: pointer; }
+        button:hover { background: #005fa3; }
+        .status { margin-top: 10px; font-weight: bold; min-height: 24px; }
+        audio { margin-top: 15px; width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text → Audio (MP3)</h1>
+
+        <label for="text">अपना टेक्स्ट लिखें:</label>
+        <textarea id="text" rows="5" placeholder="यहाँ लिखें..."></textarea>
+
+        <div class="row">
+            <label for="voice">Voice:</label>
+            <select id="voice">
+                <option value="alloy" selected>alloy</option>
+            </select>
+
+            <label for="format">Format:</label>
+            <select id="format">
+                <option value="mp3" selected>mp3</option>
+                <option value="wav">wav</option>
+                <option value="ogg">ogg</option>
+            </select>
+        </div>
+
+        <button id="speakBtn">Generate & Play</button>
+
+        <div id="status" class="status"></div>
+
+        <audio id="player" controls autoplay></audio>
+    </div>
+
+    <script>
+        const btn = document.getElementById('speakBtn');
+        const ta = document.getElementById('text');
+        const voiceSel = document.getElementById('voice');
+        const formatSel = document.getElementById('format');
+        const statusEl = document.getElementById('status');
+        const player = document.getElementById('player');
+
+        btn.addEventListener('click', async () => {
+            const text = ta.value.trim();
+            const voice = voiceSel.value;
+            const format = formatSel.value;
+
+            if (!text) {
+                statusEl.textContent = '❗ कृपया टेक्स्ट लिखें।';
+                return;
+            }
+
+            statusEl.textContent = '⏳ ऑडियो बना रहा हूँ...';
+
+            try {
+                const res = await fetch('@Url.Action("Speak", "Home")', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, voice, format })
+                });
+
+                if (!res.ok) {
+                    const errText = await res.text();
+                    throw new Error(`HTTP ${res.status}: ${errText}`);
+                }
+
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+
+                player.src = url;
+
+                const playPromise = player.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        statusEl.textContent = '✅ ऑडियो तैयार है और चल रहा है।';
+                    }).catch(() => {
+                        statusEl.textContent = 'ℹ️ ब्राउज़र ने autoplay रोका—कृपया Play दबाएँ।';
+                    });
+                } else {
+                    statusEl.textContent = '✅ ऑडियो तैयार है।';
+                }
+            } catch (e) {
+                console.error(e);
+                statusEl.textContent = '❌ Error: ' + e.message;
+            }
+        });
+    </script>
+</body>
