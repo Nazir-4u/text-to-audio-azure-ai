@@ -1,6 +1,5 @@
 ﻿@{
     ViewData["Title"] = "Text to Audio (Azure OpenAI)";
-    Layout = null; // अगर आप अपना shared _Layout.cshtml इस्तेमाल करना चाहें, तो इसे हटा दें
 }
 
 <!DOCTYPE html>
@@ -26,8 +25,8 @@
     <div class="container">
         <h1>Text → Audio (MP3)</h1>
 
-        <label for="text">अपना टेक्स्ट लिखें:</label>
-        <textarea id="text" rows="5" placeholder="यहाँ लिखें..."></textarea>
+        <label for="text"> Please enter your text</label>
+        <textarea id="text" rows="5" placeholder="type here"></textarea>
 
         <div class="row">
             <label for="voice">Voice:</label>
@@ -64,11 +63,11 @@
             const format = formatSel.value;
 
             if (!text) {
-                statusEl.textContent = '❗ कृपया टेक्स्ट लिखें।';
+                statusEl.textContent = '❗ please write text।';
                 return;
             }
 
-            statusEl.textContent = '⏳ ऑडियो बना रहा हूँ...';
+            statusEl.textContent = '⏳ generating audio...';
 
             try {
                 const res = await fetch('@Url.Action("Speak", "Home")', {
@@ -90,12 +89,12 @@
                 const playPromise = player.play();
                 if (playPromise !== undefined) {
                     playPromise.then(() => {
-                        statusEl.textContent = '✅ ऑडियो तैयार है और चल रहा है।';
+                        statusEl.textContent = '✅ The audio is ready and playing';
                     }).catch(() => {
-                        statusEl.textContent = 'ℹ️ ब्राउज़र ने autoplay रोका—कृपया Play दबाएँ।';
+                        statusEl.textContent = 'ℹ️ Browser stoped autoplay - pleas press Play button';
                     });
                 } else {
-                    statusEl.textContent = '✅ ऑडियो तैयार है।';
+                    statusEl.textContent = '✅ Audio is ready';
                 }
             } catch (e) {
                 console.error(e);
