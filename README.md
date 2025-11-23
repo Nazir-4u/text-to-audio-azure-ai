@@ -1,5 +1,6 @@
 # TextToAudio-Tts
-
+This project is a ASP.NET Core MVC Web Application that converts text input into speech (MP3/WAV) using Azure OpenAI Text-to-Speech (TTS) API.
+It provides a simple UI where users can type text, select voice and format, and instantly play the generated audio.
 
 
 ## Getting started
