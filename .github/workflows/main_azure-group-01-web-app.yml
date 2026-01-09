@@ -53,6 +53,7 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'azure-group-01-web-app'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
           slot-name: 'Production'
           package: .
           
