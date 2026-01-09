@@ -57,5 +57,6 @@ jobs:
         with:
           app-name: 'azure-learn'                     # App Service ka exact name
           # slot-name: 'staging'                      # <-- Only if you actually use a slot
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_LEARN }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
           package: ./published
+
