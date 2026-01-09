@@ -47,13 +47,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_257F636EBAF149588C36245367E6F2D6 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_454E1EFDD1254A35AF6BEC26A9D31BF9 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4F4646632FCD44F5B12AD3BC5EA909D1 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -63,3 +56,4 @@ jobs:
           slot-name: 'Production'
           package: .
           
+
