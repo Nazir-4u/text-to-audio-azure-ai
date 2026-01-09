@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: windows-latest
     permissions:
-      contents: read # required for actions/checkout
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -52,11 +52,10 @@ jobs:
           name: webapp-package
           path: ./published
 
-      # 🔑 No azure/login step needed when using publish profile
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'azure-learn'          # <-- App Service name
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          app-name: 'azure-learn'                     # App Service ka exact name
+          # slot-name: 'staging'                      # <-- Only if you actually use a slot
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_LEARN }}
           package: ./published
