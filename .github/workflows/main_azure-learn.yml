@@ -52,10 +52,11 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'azure-learn'
+          app-name: 'azure-group-01-web-app'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_LEARN }}
           package: .
           
+
 
 
 
